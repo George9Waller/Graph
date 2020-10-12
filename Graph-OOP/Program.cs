@@ -11,6 +11,7 @@ namespace Graph_OOP
         private Dictionary<Node, float> connections;
         public List<Node> allNodes = new List<Node>(); 
 
+        //Constructor
         public Node(string newName)
         {
             connections = new Dictionary<Node, float>();
@@ -18,16 +19,19 @@ namespace Graph_OOP
 
         }
 
+        //Name getter
         public string getName()
         {
             return this.name;
         }
 
+        //Adds a connection to the Node's dictionary
         public void AddConnection(Node newConnection, float weight)
         {
             this.connections.Add(newConnection, weight);
         }
 
+        //Cleanly print the connections from any Node passed
         public void printConnection(Node node)
         {
             Console.WriteLine("----- Nodes connected to " + node.getName() + " -----");
@@ -37,6 +41,7 @@ namespace Graph_OOP
             }
         }
 
+        //Prints connections of all Nodes in a list
         public void printConections(List<Node> nodes)
         {
             foreach (Node n in nodes)
@@ -49,6 +54,7 @@ namespace Graph_OOP
             }
         }
 
+        //A function to start a check connections dialogue for a user to type a node name and print all connections
         public bool checkConnected(List<Node> allNodes)
         {
             Console.WriteLine("\n\n-----Check Connected-----\nenter 'from' Node:");
@@ -70,6 +76,7 @@ namespace Graph_OOP
             return false;
         }
 
+        //Linear search to translate a string to return its Node object
         private Node StringToNode(string input, List<Node> allNodes)
         {
             foreach (Node n in allNodes)
@@ -82,10 +89,11 @@ namespace Graph_OOP
             return allNodes[0];
         }
 
+        //Depth first Traversal function to manage the use of the recursive function
         public void DepthFirstTraversal(List<Node> Nodes, Node StartNode)
         {
             List<Node> Visited = new List<Node>();
-            List<Node> Output = dfs(Nodes, StartNode, Visited);
+            List<Node> Output = dfs(StartNode, Visited);
 
             Console.WriteLine("\n\n ----- Depth First Search -----\n");
             foreach (Node n in Output)
@@ -94,15 +102,19 @@ namespace Graph_OOP
             }
         }
 
-        private List<Node> dfs(List<Node> allNodes, Node CurrentVertex, List<Node> Visited)
+        //Depth First Search handeling function to recursivly search the graph
+        //Pseudocode often shows passing a graph (or list of nodes) List<Node> allNodes to the function, however,
+        //this is not required as each Node object has a dictionary of connections
+        private List<Node> dfs(Node CurrentVertex, List<Node> Visited)
         {
-            Visited.Append(CurrentVertex);
+            Visited.Add(CurrentVertex);
+            //Key: Node object
+            //value: weight
             foreach (KeyValuePair<Node, float> o in CurrentVertex.connections)
             {
-                Node currentNode = o.Key;
-                if (!Visited.Contains(StringToNode(o.Key.ToString(), allNodes)))
+                if (!Visited.Contains(o.Key)) //Does not contain
                 {
-                    dfs(allNodes, StringToNode(o.Key.ToString(), allNodes), Visited);
+                    dfs(o.Key, Visited);
                 }
             }
 
@@ -115,6 +127,7 @@ namespace Graph_OOP
     {
         static void Main(string[] args)
         {
+            //Make nodes
             Node Invalid = new Node("InvalidNode");
             Node London = new Node("London");
             Node HaywardsHeath = new Node("Haywards-Heath");
@@ -128,6 +141,7 @@ namespace Graph_OOP
             Node Reading = new Node("Reading");
             Node Redhill = new Node("Redhill");
             
+            //Add connections to the Nodes
             London.AddConnection(HaywardsHeath, 40f);
             London.AddConnection(Redhill, 20f);
             London.AddConnection(Reading, 25f);
@@ -171,6 +185,7 @@ namespace Graph_OOP
             Redhill.AddConnection(London, 20f);
             Redhill.AddConnection(HaywardsHeath, 14f);
             
+            //Add all the Nodes to an All Nodes list
             List<Node> allNodes = new List<Node>()
             {
                 London,
